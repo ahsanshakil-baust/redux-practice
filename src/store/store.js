@@ -14,17 +14,16 @@ const orderCake = (qty = 1) => {
     payload: qty,
   };
 };
-
-const restockCake = (qty = 1) => {
+const orderIceCream = (qty = 1) => {
   return {
-    type: CAKE_RESTOCKED,
+    type: ICECREAM_ORDERED,
     payload: qty,
   };
 };
 
-const orderIceCream = (qty = 1) => {
+const restockCake = (qty = 1) => {
   return {
-    type: ICECREAM_ORDERED,
+    type: CAKE_RESTOCKED,
     payload: qty,
   };
 };
@@ -53,7 +52,7 @@ const cakeState = {
 };
 
 const iceCreamState = {
-  numberOfIceCream: 20,
+  numberOfIceCream: 30,
 };
 
 // Reducer
