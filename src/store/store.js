@@ -52,7 +52,7 @@ const cakeState = {
 };
 
 const iceCreamState = {
-  numberOfIceCream: 30,
+  numberOfIceCream: 20,
 };
 
 // Reducer
