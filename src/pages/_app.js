@@ -1,6 +1,6 @@
 import "@/styles/globals.css";
 import { Provider } from "react-redux";
-import { store } from "@/store/asyncAction";
+import store from "@/store/rtkStore";
 
 export default function App({ Component, pageProps }) {
   return (
