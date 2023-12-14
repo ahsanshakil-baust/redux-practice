@@ -7,17 +7,28 @@ import iceCreamReducer, {
   orderIceCream,
   restockIceCream,
 } from "@/store/feature/iceCreamSlice";
+import userReducer, { fetchUsers } from "@/store/feature/userSlice";
 
 const store = configureStore({
   reducer: {
     cake: cakeReducer,
     iceCream: iceCreamReducer,
+    user: userReducer,
   },
 });
 
-const unSubscribe = store.subscribe(() =>
-  console.log("Updated State: ", store.getState())
-);
+// const unSubscribe = store.subscribe(() =>
+//   console.log("Updated State: ", store.getState())
+// );
+
+const unSubscribe = store.subscribe(() => {
+  console.log("Updated State: ", store.getState());
+  if (!store.getState().user.loading) {
+    unSubscribe();
+  }
+});
+
+store.dispatch(fetchUsers());
 
 const actions = bindActionCreators(
   {
@@ -27,16 +38,19 @@ const actions = bindActionCreators(
     restockIceCream,
     changeIceCreamColor,
     changeIceCreamName,
+    fetchUsers,
   },
   store.dispatch
 );
 
-actions.orderCake(15);
+// actions.orderCake(15);
 // actions.restockCake(20);
 // actions.orderIceCream(5);
 // actions.changeIceCreamColor("blue");
 // actions.changeIceCreamName("private");
 
-unSubscribe();
+actions.fetchUsers();
+
+// unSubscribe();
 
 export default store;
