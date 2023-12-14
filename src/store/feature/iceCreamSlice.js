@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { orderCake } from "./cakeSlice";
 
 const initialState = {
   numOfIceCream: 25,
@@ -28,6 +29,16 @@ const iceCreamSlice = createSlice({
     changeIceCreamName: (state, action) => {
       state.color.name = action.payload;
     },
+  },
+  // extraReducers: {
+  //   ["cake/ordered"]: (state, action) => {
+  //     state.numOfIceCreams -= action.payload;
+  //   },
+  // },
+  extraReducers: (builder) => {
+    builder.addCase(orderCake, (state, action) => {
+      state.numOfIceCream -= action.payload;
+    });
   },
 });
 

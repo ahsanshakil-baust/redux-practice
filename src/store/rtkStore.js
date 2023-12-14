@@ -32,10 +32,10 @@ const actions = bindActionCreators(
 );
 
 actions.orderCake(15);
-actions.restockCake(20);
-actions.orderIceCream(5);
-actions.changeIceCreamColor("blue");
-actions.changeIceCreamName("private");
+// actions.restockCake(20);
+// actions.orderIceCream(5);
+// actions.changeIceCreamColor("blue");
+// actions.changeIceCreamName("private");
 
 unSubscribe();
 
