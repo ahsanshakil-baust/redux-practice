@@ -22,13 +22,11 @@ const store = configureStore({
 // );
 
 const unSubscribe = store.subscribe(() => {
-  console.log("Updated State: ", store.getState());
+  // console.log("Updated State: ", store.getState());
   if (!store.getState().user.loading) {
     unSubscribe();
   }
 });
-
-store.dispatch(fetchUsers());
 
 const actions = bindActionCreators(
   {
@@ -49,7 +47,7 @@ const actions = bindActionCreators(
 // actions.changeIceCreamColor("blue");
 // actions.changeIceCreamName("private");
 
-actions.fetchUsers();
+// actions.fetchUsers();
 
 // unSubscribe();
 
