@@ -1,72 +1,86 @@
-import { createStore } from "redux";
+import {
+  createStore,
+  bindActionCreators,
+  combineReducers,
+  applyMiddleware,
+} from "redux";
 import { produce } from "immer";
+import { createLogger } from "redux-logger";
 
 const CAKE_ORDERED = "CAKE_ORDERED";
 const CAKE_RESTOCKED = "CAKE_RESTOCKED";
-const CAKE_AVAILABLE = "CAKE_AVAILABLE";
+const CAKE_STATUS = "CAKE_STATUS";
+const ICECREAM_ORDERED = "ICECREAM_ORDERED";
+const ICECREAM_RESTOCKED = "ICECREAM_RESTOCKED";
 
+const logger = createLogger();
+
+// Action
 const orderCake = (qty = 1) => {
   return {
     type: CAKE_ORDERED,
     payload: qty,
   };
 };
+const orderIceCream = (qty = 1) => {
+  return {
+    type: ICECREAM_ORDERED,
+    payload: qty,
+  };
+};
 
-const restockCake = (qty = 10) => {
+const restockCake = (qty = 1) => {
   return {
     type: CAKE_RESTOCKED,
     payload: qty,
   };
 };
 
-const availableCake = (status) => {
+const restockIceCream = (qty = 1) => {
   return {
-    type: CAKE_AVAILABLE,
+    type: ICECREAM_RESTOCKED,
+    payload: qty,
+  };
+};
+
+const statusOfCake = (status) => {
+  return {
+    type: CAKE_STATUS,
     payload: status,
   };
 };
 
-const initialState = {
-  cake: {
-    available: true,
-    numOfCake: 15,
-  },
-  iceCream: {
-    available: false,
-    numOfIceCream: 0,
+const cakeState = {
+  numberOfCakes: 10,
+  nameOfCake: {
+    typeOfCake: {
+      isOk: true,
+    },
   },
 };
 
-const cakeReducer = (state = initialState, action) => {
+const iceCreamState = {
+  numberOfIceCream: 20,
+};
+
+// Reducer
+const cakeReducer = (state = cakeState, action) => {
   switch (action.type) {
     case CAKE_ORDERED:
-      return produce(state, (draft) => {
-        draft.cake = {
-          numOfCake: draft.cake.numOfCake - action.payload,
-          available: draft.cake.numOfCake - action.payload <= 0 ? false : true,
-        };
-      });
-
-    // return {
-    //   ...state,
-    //   cake: {
-    //     ...state.cake,
-    //     numOfCake: state.cake.numOfCake - action.payload,
-    //     available: state.cake.numOfCake - action.payload <= 0 ? false : true,
-    //   },
-    // };
+      return {
+        ...state,
+        numberOfCakes: state.numberOfCakes - action.payload,
+      };
 
     case CAKE_RESTOCKED:
-      return produce(state, (draft) => {
-        draft.cake = {
-          numOfCake: draft.cake.numOfCake + action.payload,
-          available: draft.cake.numOfCake + action.payload <= 0 ? false : true,
-        };
-      });
+      return {
+        ...state,
+        numberOfCakes: state.numberOfCakes + action.payload,
+      };
 
-    case CAKE_AVAILABLE:
+    case CAKE_STATUS:
       return produce(state, (draft) => {
-        draft.cake.available = action.payload;
+        draft.nameOfCake.typeOfCake.isOk = action.payload;
       });
 
     default:
@@ -74,13 +88,54 @@ const cakeReducer = (state = initialState, action) => {
   }
 };
 
-export const store = createStore(cakeReducer);
+const iceCreamReducer = (state = iceCreamState, action) => {
+  switch (action.type) {
+    case ICECREAM_ORDERED:
+      return {
+        ...state,
+        numberOfIceCream: state.numberOfIceCream - action.payload,
+      };
 
-const unsubscribe = store.subscribe(() =>
-  console.log("Updated State : ", store.getState())
+    case ICECREAM_RESTOCKED:
+      return {
+        ...state,
+        numberOfIceCream: state.numberOfIceCream + action.payload,
+      };
+
+    default:
+      return state;
+  }
+};
+
+const rootReducer = combineReducers({
+  cake: cakeReducer,
+  iceCream: iceCreamReducer,
+});
+
+export const store = createStore(rootReducer, applyMiddleware(logger));
+
+const unSubscribe = store.subscribe(
+  () => {}
+  // console.log("Updated State : ", store.getState())
 );
 
-store.dispatch(orderCake(15));
-store.dispatch(restockCake(6));
+// store.dispatch(orderCake(2));
+// store.dispatch(orderCake(1));
+// store.dispatch(orderCake(5));
+// store.dispatch(restockCake(10));
 
-unsubscribe();
+const actions = bindActionCreators(
+  { orderCake, restockCake, statusOfCake, orderIceCream, restockIceCream },
+  store.dispatch
+);
+
+actions.orderCake(3);
+actions.orderCake(5);
+actions.restockCake(10);
+actions.statusOfCake(false);
+
+actions.orderIceCream(30);
+actions.orderIceCream(5);
+actions.restockIceCream(20);
+
+unSubscribe();
