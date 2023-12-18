@@ -8,38 +8,42 @@ import iceCreamReducer, {
   restockIceCream,
 } from "@/store/feature/iceCreamSlice";
 import userReducer, { fetchUsers } from "@/store/feature/userSlice";
+import { apiSlice } from "./feature/api/apiSlice";
 
 const store = configureStore({
   reducer: {
     cake: cakeReducer,
     iceCream: iceCreamReducer,
-    user: userReducer,
+    // user: userReducer,
+    [apiSlice.reducerPath]: apiSlice.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(apiSlice.middleware),
 });
 
 // const unSubscribe = store.subscribe(() =>
 //   console.log("Updated State: ", store.getState())
 // );
 
-const unSubscribe = store.subscribe(() => {
-  // console.log("Updated State: ", store.getState());
-  if (!store.getState().user.loading) {
-    unSubscribe();
-  }
-});
+// const unSubscribe = store.subscribe(() => {
+//   // console.log("Updated State: ", store.getState());
+//   if (!store.getState().user.loading) {
+//     unSubscribe();
+//   }
+// });
 
-const actions = bindActionCreators(
-  {
-    orderCake,
-    restockCake,
-    orderIceCream,
-    restockIceCream,
-    changeIceCreamColor,
-    changeIceCreamName,
-    fetchUsers,
-  },
-  store.dispatch
-);
+// const actions = bindActionCreators(
+//   {
+//     orderCake,
+//     restockCake,
+//     orderIceCream,
+//     restockIceCream,
+//     changeIceCreamColor,
+//     changeIceCreamName,
+//     fetchUsers,
+//   },
+//   store.dispatch
+// );
 
 // actions.orderCake(15);
 // actions.restockCake(20);
